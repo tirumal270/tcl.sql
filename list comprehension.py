@@ -1,70 +1,116 @@
-#20
-result = ["Even" if i % 2 == 0 else "Odd" for i in range(1, 11)]
-print(result)
+START TRANSACTION;
 
-#21
-words = ["Ajay", "Python", "Django"]
-lengths = [len(word) for word in words]
-print(lengths)
+UPDATE accounts
+SET balance = balance + 2000
+WHERE holder_name = 'Rahul';
 
+SELECT * FROM accounts
+WHERE holder_name = 'Rahul';
 
-#22
-files = ["data.csv", "report.pdf", "image.png"]
-extensions = [file.split(".")[1] for file in files]
-print(extensions)
-
-#23
-ascii_dict = {ch: ord(ch) for ch in "ABC"}
-print(ascii_dict)
-
-#24
-keys = ['a', 'b', 'c']
-values = [1, 2, 3]
-result = {k: v for k, v in zip(keys, values)}
-print(result)
+COMMIT;
 
 
-#25
-primes = [n for n in range(2, 101)
-          if all(n % i != 0 for i in range(2, int(n**0.5) + 1))]
-print(primes)
 
-#26
-pairs = [(x, y) for x in [1, 2, 3] for y in [3, 1, 4] if x != y]
-print(pairs)
+START TRANSACTION;
 
-#27
-palindromes = [n for n in range(1, 101) if str(n) == str(n)[::-1]]
-print(palindromes)
+UPDATE accounts
+SET balance = balance - 1500
+WHERE holder_name = 'Priya';
 
-#28
-list1 = [1, 2, 3]
-list2 = [10, 20, 30]
-result = [x + y for x, y in zip(list1, list2)]
-print(result)
+SELECT * FROM accounts
+WHERE holder_name = 'Priya';
 
-#29
-students = [
-    {'name': 'Ajay', 'marks': 80},
-    {'name': 'Riya', 'marks': 90}
-]
-names = [student['name'] for student in students]
-print(names)
+ROLLBACK;
+
+SELECT * FROM accounts
+WHERE holder_name = 'Priya';
 
 
-#30
-palindromes = [n for n in range(1, 1001) if str(n) == str(n)[::-1]]
-print(palindromes)
+START TRANSACTION;
 
-#31
-words = ['apple', 'ant', 'banana', 'ball']
-result = [word for word in words if word.startswith('a')]
-print(result)
+UPDATE accounts
+SET balance = balance + 3000
+WHERE holder_name = 'Amit';
 
-#32
-numbers = [n for n in range(1, 21) if n % 2 == 0 or n % 3 == 0]
-print(numbers)
+SAVEPOINT sp1;
 
-#33
-coordinates = [[x, y] for x in range(3) for y in range(3)]
-print(coordinates)
+
+
+UPDATE accounts
+SET balance = balance - 1000
+WHERE holder_name = 'Amit';
+
+UPDATE accounts
+SET balance = balance - 500
+WHERE holder_name = 'Amit';
+
+ROLLBACK TO sp1;
+
+COMMIT;
+
+
+
+
+START TRANSACTION;
+
+UPDATE accounts
+SET balance = balance - 2000
+WHERE holder_name = 'Rahul';
+
+UPDATE accounts
+SET balance = balance + 2000
+WHERE holder_name = 'Priya';
+
+COMMIT;
+
+SELECT * FROM accounts;
+
+
+
+START TRANSACTION;
+
+UPDATE accounts
+SET balance = balance - 3000
+WHERE holder_name = 'Sneha';
+
+-- Error occurs here
+
+ROLLBACK;
+
+SELECT holder_name, balance
+FROM accounts
+WHERE holder_name IN ('Sneha','Rohit');
+
+
+
+
+
+
+
+START TRANSACTION;
+
+UPDATE accounts
+SET balance = balance + 2000
+WHERE holder_name = 'Rohit';
+
+SAVEPOINT sp1;
+
+UPDATE accounts
+SET balance = balance - 500
+WHERE holder_name = 'Rohit';
+
+SAVEPOINT sp2;
+
+UPDATE accounts
+SET balance = balance - 1000
+WHERE holder_name = 'Rohit';
+
+ROLLBACK TO sp2;
+
+COMMIT;
+
+SELECT * FROM accounts
+WHERE holder_name = 'Rohit';
+
+
+
